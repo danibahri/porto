@@ -10,12 +10,14 @@ import TechCloud from "./components/TechCloud";
 import Chatbot from "./components/Chatbot";
 import ScrollVelocity from "./components/ScrollVelocity";
 import Experience from "./components/Experience";
+import MusicPlayer from "./components/MusicPlayer";
 
 function App() {
   return (
     <div className="bg-black min-h-screen text-white selection:bg-purple-500/30 cursor-none">
       <BlobCursor />
       <Chatbot />
+      <MusicPlayer />
       <Navbar />
       <main>
         <Hero />

@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Canvas, extend, useFrame } from "@react-three/fiber";
@@ -18,7 +17,6 @@ import {
 } from "@react-three/rapier";
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 
-// replace with your own imports, see the usage snippet for details
 import cardGLB from "./card.glb";
 import lanyard from "./lanyard.png";
 
@@ -28,7 +26,7 @@ import "./Lanyard.css";
 extend({ MeshLineGeometry, MeshLineMaterial });
 
 export default function Lanyard({
-  position = [0, 0, 30],
+  position = [0, 0, 27],
   gravity = [0, -40, 0],
   fov = 20,
   transparent = true,
@@ -128,7 +126,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
-    [0, 1.5, 0],
+    [0, 2, 0],
   ]);
 
   useEffect(() => {
@@ -198,10 +196,11 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
           {...segmentProps}
           type={dragged ? "kinematicPosition" : "dynamic"}
         >
-          <CuboidCollider args={[0.8, 1.125, 0.01]} />
+          <CuboidCollider args={[1.6, 2.25, 0.01]} />
           <group
-            scale={2.25}
-            position={[0, -1.2, -0.05]}
+            scale={3}
+            position={[0, -1.5, -0.05]}
+            rotation={[0, 0, 0]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
             onPointerUp={(e) => (

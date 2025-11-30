@@ -14,23 +14,8 @@ const CurvedLoop = () => {
             ease: "linear",
           }}
         >
-          OPEN TO WORK • CREATIVE DEVELOPER • OPEN TO WORK • CREATIVE DEVELOPER
-          • OPEN TO WORK • CREATIVE DEVELOPER •
-        </motion.div>
-
-        {/* Duplicate for seamless loop */}
-        <motion.div
-          className="absolute whitespace-nowrap text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 opacity-30"
-          style={{ left: "1000px" }} // Approximate offset, better to use % or measure
-          animate={{ x: [0, -1000] }}
-          transition={{
-            repeat: Infinity,
-            duration: 20,
-            ease: "linear",
-          }}
-        >
-          OPEN TO WORK • CREATIVE DEVELOPER • OPEN TO WORK • CREATIVE DEVELOPER
-          • OPEN TO WORK • CREATIVE DEVELOPER •
+          OPEN TO WORK • CREATIVE DEVELOPER • FRONTEND DEVELOPER • BACKEND
+          DEVELOPER • FULLSTACK DEVELOPER • OPEN TO WORK
         </motion.div>
       </div>
     </div>

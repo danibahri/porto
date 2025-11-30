@@ -3,25 +3,42 @@ import { motion } from "framer-motion";
 
 const experiences = [
   {
-    year: "2023 - Sekarang",
-    title: "Senior Frontend Developer",
-    company: "Tech Innovators Inc.",
-    description:
-      "Memimpin pengembangan aplikasi web skala besar menggunakan React dan Next.js. Mengimplementasikan sistem desain modern dan meningkatkan performa aplikasi hingga 40%.",
+    year: "September 2025 - Desember 2025",
+    title: "Magang IT App Developer (WFH)",
+    company: "DBKlik",
+    points: [
+      "Membantu pengembangan website e-commerce dan admin.",
+      "Membuat fitur membership, gebyar, Chatroom, dan optimasi halaman.",
+    ],
   },
   {
-    year: "2021 - 2023",
-    title: "Frontend Developer",
-    company: "Creative Solutions Studio",
-    description:
-      "Berkolaborasi dengan tim desain untuk menciptakan antarmuka pengguna yang interaktif. Mengembangkan fitur-fitur utama untuk klien e-commerce internasional.",
+    year: "September 2025 - Desember 2025",
+    title: "Magang",
+    company: "PT HM Sampoerna - Vendor ISS",
+    points: [
+      "Membuat sistem internal vendor ISS dengan menggunakan Laravel dan Tailwind.",
+      "Membangun fitur maintenance dengan sistem QR untuk setiap unit barang.",
+      "Monitoring unit barang secara realtime.",
+    ],
   },
   {
-    year: "2019 - 2021",
-    title: "Junior Web Developer",
-    company: "StartUp Alpha",
-    description:
-      "Memulai karir dengan membangun landing page responsif dan memelihara kode legacy. Belajar banyak tentang best practices dan kerja tim dalam lingkungan agile.",
+    year: "Januari 2024 - Februari 2024",
+    title: "Kerja Praktek",
+    company: "Dinas Komunikasi dan Informatika",
+    points: [
+      "Mengembangkan website untuk open rekrutmen Komisi Informasi menggunakan Laravel, PHP, dan MySQL.",
+      "Membangun fitur pendaftaran online, pengelolaan data pelamar, dan sistem notifikasi otomatis.",
+      "Mengembangkan Website untuk PPID Sumenep.",
+    ],
+  },
+  {
+    year: "April 2021 - Juni 2021",
+    title: "PKL Administrasi Jaringan",
+    company: "Dinas Komunikasi dan Informatika",
+    points: [
+      "Membantu dalam proses pengalokasian kabel dan pengaturan jaringan di kantor dinas dan rumah sakit.",
+      "Belajar menyambungkan kabel fiber optik menggunakan alat splicer fiber optik.",
+    ],
   },
 ];
 
@@ -34,7 +51,7 @@ const Experience = () => {
           whileInView={{ opacity: 1, y: 0 }}
           className="text-3xl md:text-5xl font-bold mb-16 text-center"
         >
-          Pengalaman Profesional
+          Pengalaman
         </motion.h2>
 
         <div className="relative border-l border-gray-800 ml-4 md:ml-10 space-y-12">
@@ -59,9 +76,11 @@ const Experience = () => {
               </div>
 
               <h4 className="text-lg text-gray-400 mb-4">{exp.company}</h4>
-              <p className="text-gray-500 leading-relaxed max-w-2xl">
-                {exp.description}
-              </p>
+              <ul className="list-disc list-outside ml-4 space-y-2 text-gray-500 leading-relaxed max-w-2xl">
+                {exp.points.map((point, i) => (
+                  <li key={i}>{point}</li>
+                ))}
+              </ul>
             </motion.div>
           ))}
         </div>

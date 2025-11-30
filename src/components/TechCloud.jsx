@@ -6,27 +6,24 @@ const TechCloud = () => {
 
   useEffect(() => {
     const container = containerRef.current;
+    const getIcon = (slug) =>
+      `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${slug}" width="50" height="50" alt="icon" style="pointer-events: none;" />`;
+
     const texts = [
-      "React",
-      "JavaScript",
-      "CSS3",
-      "HTML5",
-      "Node.js",
-      "Tailwind",
-      "Git",
-      "GitHub",
-      "Framer Motion",
-      "Vite",
-      "TypeScript",
-      "Next.js",
-      "Firebase",
-      "Supabase",
-      "Three.js",
-      "Matter.js",
-      "Python",
-      "SQL",
-      "MongoDB",
-      "GraphQL",
+      getIcon("react/react-original.svg"),
+      getIcon("javascript/javascript-original.svg"),
+      getIcon("css3/css3-original.svg"),
+      getIcon("html5/html5-original.svg"),
+      getIcon("php/php-original.svg"),
+      getIcon("laravel/laravel-original.svg"),
+      getIcon("nodejs/nodejs-original.svg"),
+      getIcon("tailwindcss/tailwindcss-original.svg"),
+      getIcon("git/git-original.svg"),
+      getIcon("github/github-original.svg"),
+      getIcon("vitejs/vitejs-original.svg"),
+      getIcon("python/python-original.svg"),
+      getIcon("mysql/mysql-original.svg"),
+      getIcon("bootstrap/bootstrap-original.svg"),
     ];
 
     const options = {
@@ -35,9 +32,9 @@ const TechCloud = () => {
       initSpeed: "normal",
       direction: 135,
       keep: true,
+      useHTML: true,
     };
 
-    // Cleanup previous instance if any (TagCloud appends to container)
     if (container) {
       container.innerHTML = "";
       TagCloud(container, texts, options);

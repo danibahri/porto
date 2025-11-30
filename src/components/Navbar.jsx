@@ -21,7 +21,7 @@ const Navbar = () => {
         className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 flex items-center justify-between w-full max-w-2xl shadow-lg"
       >
         <a href="#" className="text-xl font-bold text-white tracking-tighter">
-          PORTFOLIO
+          Ramadani
         </a>
 
         {/* Desktop Menu */}

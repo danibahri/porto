@@ -8,7 +8,7 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([
     {
       role: "model",
-      text: "Hi! I am an AI assistant for this portfolio. Ask me anything about the developer!",
+      text: "Halo, saya adalah asisten AI untuk portofolio Ahmad Ramadani Bahri. Bagaimana saya bisa membantu Anda hari ini?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -34,17 +34,59 @@ const Chatbot = () => {
     try {
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
       if (!apiKey) {
+        console.error("API Key not found");
         throw new Error("API Key not found");
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({
+        model: "gemini-2.5-flash",
+        systemInstruction: `Kamu adalah asisten AI untuk portofolio Ahmad Ramadani Bahri. Jawablah dengan ramah, antusias, dan profesional dalam Bahasa Indonesia.
+        
+        Tugasmu adalah menjelaskan fitur dan konten website ini kepada pengunjung. Berikut adalah detail lengkap website ini:
+
+        1. **Hero Section (Beranda)**:
+           - Menampilkan nama "Ahmad Ramadani Bahri" dan role "Creative Developer".
+           - **Fitur Unik**: Ada kartu ID (Lanyard) 3D interaktif yang menggantung. Kartu ini bisa ditarik-tarik (physics-based), sudah dibalik 180 derajat, dan diperbesar 5x lipat agar jelas.
+           - **Background**: Efek Aurora yang indah dan bergerak.
+
+        2. **Music Player**:
+           - Pemutar musik melayang di pojok kiri bawah.
+           - **Fitur**: Bisa di-minimize menjadi tombol bulat berputar.
+           - **Playlist**: Memiliki 3 lagu (Lofi Study, Ambient Piano, Cyberpunk City) yang bisa dipilih lewat tombol list.
+           - **Visualizer**: Ada visualizer audio real-time yang bergerak sesuai irama musik.
+
+        3. **Tentang Saya (About)**:
+           - Menjelaskan passion Ahmad dalam pengembangan web interaktif.
+           - Menggunakan animasi scroll-reveal.
+
+        4. **Teknologi (Tech Stack)**:
+           - Menampilkan bola 3D interaktif (Tech Cloud) berisi ikon-ikon teknologi yang dikuasai.
+
+        5. **Pengalaman (Experience)**:
+           - Timeline vertikal yang rapi menjelaskan riwayat pekerjaan profesional.
+
+        6. **Proyek (Projects)**:
+           - Menampilkan "Proyek Unggulan" dengan efek kartu Spotlight (border bersinar saat di-hover).
+
+        7. **Kontak**:
+           - Tombol sosial media dengan efek magnetik saat didekati kursor.
+
+        8. **Fitur Lainnya**:
+           - **Cursor**: Blob cursor yang mengikuti mouse seperti jelly.
+           - **Scroll Velocity**: Teks berjalan yang kecepatannya mengikuti kecepatan scroll pengguna.
+           - **Chatbot**: Kamu sendiri! Asisten pintar yang siap membantu.
+
+        Jika ditanya tentang website ini, jelaskan betapa keren dan interaktifnya fitur-fitur di atas, terutama Lanyard 3D dan Music Player-nya!`,
+      });
 
       const chat = model.startChat({
-        history: messages.map((m) => ({
-          role: m.role === "model" ? "model" : "user",
-          parts: [{ text: m.text }],
-        })),
+        history: messages
+          .filter((_, index) => index > 0) // Skip the initial greeting
+          .map((m) => ({
+            role: m.role === "model" ? "model" : "user",
+            parts: [{ text: m.text }],
+          })),
         generationConfig: {
           maxOutputTokens: 100,
         },
@@ -72,7 +114,7 @@ const Chatbot = () => {
   return (
     <>
       <motion.button
-        className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full shadow-lg text-white hover:scale-110 transition-transform"
+        className="fixed bottom-6 right-6 z-50 p-4 bg-black border border-white/10 rounded-full shadow-lg text-white hover:scale-110 transition-transform"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}

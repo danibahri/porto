@@ -8,7 +8,7 @@ const Hero = () => {
     <AuroraBackground className="min-h-screen">
       <section
         id="home"
-        className="flex flex-col items-center justify-center relative overflow-hidden pt-20 w-full"
+        className="flex flex-col items-center justify-center relative pt-20 w-full"
       >
         <div className="text-center z-10 px-4 flex flex-col items-center">
           <motion.h2
@@ -17,7 +17,7 @@ const Hero = () => {
             transition={{ delay: 0.2 }}
             className="text-gray-400 text-lg md:text-xl mb-4 tracking-widest uppercase"
           >
-            Creative Developer
+            Ahmad Ramadani Bahri
           </motion.h2>
 
           <motion.h1
@@ -63,7 +63,7 @@ const Hero = () => {
           </motion.div>
 
           {/* Lanyard as Profile Photo */}
-          <div className="relative w-full h-[400px] flex justify-center items-start">
+          <div className="relative w-full h-[800px] flex justify-center items-start -mt-20">
             <Lanyard />
           </div>
         </div>
