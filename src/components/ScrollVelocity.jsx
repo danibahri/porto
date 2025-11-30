@@ -58,10 +58,10 @@ const ScrollVelocity = () => {
   return (
     <section className="py-20 overflow-hidden bg-black">
       <div className="text-6xl md:text-9xl font-bold uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-500 opacity-40">
+        <ParallaxText baseVelocity={5}>Web Developer</ParallaxText>
         <ParallaxText baseVelocity={-5}>
           Frontend Developer - Backend Developer - Fullstack Developer
         </ParallaxText>
-        <ParallaxText baseVelocity={5}>Give it a try - Let's chat</ParallaxText>
       </div>
     </section>
   );

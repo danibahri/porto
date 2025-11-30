@@ -26,9 +26,10 @@ const Hero = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-5xl md:text-8xl font-bold text-white mb-6 tracking-tighter"
           >
-            Building <br />
+            Junior
+            <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-              Digital Experiences
+              Web Developer
             </span>
           </motion.h1>
 
@@ -38,7 +39,7 @@ const Hero = () => {
             transition={{ delay: 0.5 }}
             className="text-gray-400 max-w-lg mx-auto text-lg mb-10"
           >
-            I craft interactive and immersive web applications that leave a
+            I build interactive and immersive web applications that leave a
             lasting impression.
           </motion.p>
 
