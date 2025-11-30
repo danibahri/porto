@@ -17,12 +17,12 @@ const tracks = [
   {
     title: "DJ NGGAK DULU",
     artist: "DJ NGGAK DULU",
-    url: "../../public/music/DJ NGGAK DULU.mp3",
+    url: "/music/DJ NGGAK DULU.mp3",
   },
   {
     title: "Blue - yung kai",
     artist: "Blue - yung kai",
-    url: "../../public/music/Blue - yung kai.mp3",
+    url: "/music/Blue - yung kai.mp3",
   },
 ];
 
