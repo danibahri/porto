@@ -11,6 +11,7 @@ import Chatbot from "./components/Chatbot";
 import ScrollVelocity from "./components/ScrollVelocity";
 import Experience from "./components/Experience";
 import MusicPlayer from "./components/MusicPlayer";
+import Services from "./components/Services";
 
 function App() {
   return (
@@ -24,8 +25,9 @@ function App() {
         <ScrollVelocity />
         <Experience />
         <CurvedLoop />
-        <Projects />
         <TechCloud />
+        <Projects />
+        <Services />
         <About />
         <Contact />
       </main>
