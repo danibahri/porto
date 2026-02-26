@@ -18,7 +18,7 @@ function App() {
     <div className="bg-dark min-h-screen text-white selection:bg-purple-500/30 cursor-none noise-overlay overflow-x-hidden">
       <BlobCursor />
       <Chatbot />
-      <MusicPlayer />
+      {/* <MusicPlayer /> */}
       <Navbar />
       <main className="relative">
         {/* Background grid pattern */}
