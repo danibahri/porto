@@ -26,10 +26,6 @@ const TechCloud = () => {
       getIcon("mysql/mysql-original.svg"),
       getIcon("bootstrap/bootstrap-original.svg"),
       getIcon("livewire/livewire-original.svg"),
-      // Flux (text badge since no devicon available)
-      `<span style="background: linear-gradient(135deg, #a855f7, #ec4899); color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 16px; pointer-events: none; white-space: nowrap;">⚡ Flux</span>`,
-      // Livewire text alternative
-      `<span style="background: linear-gradient(135deg, #fb70a9, #e83e8c); color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 16px; pointer-events: none; white-space: nowrap;">🔥 Livewire</span>`,
     ];
 
     const options = {

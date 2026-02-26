@@ -21,7 +21,41 @@ import {
   Award,
 } from "lucide-react";
 
+// Dynamically scan project images (supports jpg, jpeg, png, gif, webp, svg, bmp)
+const projectImageFiles = import.meta.glob(
+  "/public/project/*.{jpg,jpeg,png,gif,webp,svg,bmp}",
+  { eager: true, query: "?url", import: "default" },
+);
+
+// Resolve image by slug: matches any file starting with the slug in /public/project/
+const resolveProjectImage = (slug) => {
+  if (!slug) return null;
+  const match = Object.entries(projectImageFiles).find(([path]) => {
+    const filename = path.split("/").pop().split(".")[0].toLowerCase();
+    return filename === slug.toLowerCase();
+  });
+  return match ? match[1] : null;
+};
+
 const projects = [
+  // PT ISS on sampoerna web monitoring and maintenance system
+  {
+    title: "PT ISS Web Monitoring & Maintenance",
+    subtitle: "Internal Vendor Management System",
+    description:
+      "Comprehensive web monitoring and maintenance system for internal vendor management, ensuring seamless operations and real-time insights.",
+    tech: ["Laravel", "MySQL", "Tailwind CSS", "JavaScript"],
+    features: [
+      "Real-time monitoring dashboard",
+      "Automated maintenance scheduling",
+      "Vendor performance analytics",
+      "Dynamic reporting tools",
+    ],
+    icon: Building2,
+    color: "from-red-500 to-orange-500",
+    imageSlug: "fmsiss",
+    link: "https://fms-iss.my.id/",
+  },
   {
     title: "Recruitment Komisi-Informasi Sumenep",
     subtitle: "Government Platform",
@@ -36,8 +70,8 @@ const projects = [
     ],
     icon: Building2,
     color: "from-red-500 to-orange-500",
-    image: "/project/recruitment.png",
-    link: "#",
+    imageSlug: "recruitment",
+    link: "https://seleksi-ki.sumenepkab.go.id/",
   },
   {
     title: "Medical Record Management System",
@@ -53,7 +87,7 @@ const projects = [
     ],
     icon: Hospital,
     color: "from-purple-500 to-violet-500",
-    image: "/project/medical-record.png",
+    imageSlug: "medical-record",
     link: "#",
   },
   {
@@ -70,7 +104,7 @@ const projects = [
     ],
     icon: PlayCircle,
     color: "from-blue-500 to-cyan-500",
-    image: "/project/animefly.png",
+    imageSlug: "animefly",
     link: "#",
   },
   {
@@ -87,7 +121,7 @@ const projects = [
     ],
     icon: BarChart2,
     color: "from-emerald-500 to-teal-500",
-    image: "/project/sentiment-analysis.png",
+    imageSlug: "sentiment-analysis",
     link: "#",
   },
 ];
@@ -307,7 +341,7 @@ const Projects = () => {
                       {/* Image Preview */}
                       <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-2xl bg-gradient-to-br from-gray-900 to-gray-950">
                         <img
-                          src={project.image}
+                          src={resolveProjectImage(project.imageSlug)}
                           alt={project.title}
                           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                           loading="lazy"

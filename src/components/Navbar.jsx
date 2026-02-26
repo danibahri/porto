@@ -49,9 +49,9 @@ const Navbar = () => {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm group-hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] transition-shadow duration-300">
             R
           </div>
-          <span className="text-white font-semibold tracking-tight hidden sm:block">
+          {/* <span className="text-white font-semibold tracking-tight hidden sm:block">
             Ramadani
-          </span>
+          </span> */}
         </a>
 
         {/* Desktop Menu */}
