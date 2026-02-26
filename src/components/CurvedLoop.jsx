@@ -3,19 +3,22 @@ import { motion } from "framer-motion";
 
 const CurvedLoop = () => {
   return (
-    <div className="w-full overflow-hidden py-10 bg-black">
-      <div className="relative w-full h-[150px] flex items-center">
+    <div className="w-full overflow-hidden py-8 relative">
+      <div className="absolute inset-0 bg-gradient-to-r from-dark via-transparent to-dark z-10 pointer-events-none" />
+      <div className="relative w-full h-[120px] flex items-center">
         <motion.div
-          className="absolute whitespace-nowrap text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 opacity-30"
-          animate={{ x: [0, -1000] }}
+          className="absolute whitespace-nowrap text-5xl md:text-7xl font-black tracking-tighter"
+          animate={{ x: [0, -1200] }}
           transition={{
             repeat: Infinity,
-            duration: 20,
+            duration: 25,
             ease: "linear",
           }}
         >
-          OPEN TO WORK • CREATIVE DEVELOPER • FRONTEND DEVELOPER • BACKEND
-          DEVELOPER • FULLSTACK DEVELOPER • OPEN TO WORK
+          <span className="text-gradient-purple opacity-20">
+            OPEN TO WORK ✦ CREATIVE DEVELOPER ✦ FRONTEND ✦ BACKEND ✦ FULLSTACK ✦
+            OPEN TO WORK ✦ CREATIVE DEVELOPER ✦ FRONTEND ✦ BACKEND ✦ FULLSTACK ✦
+          </span>
         </motion.div>
       </div>
     </div>

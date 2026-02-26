@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SpotlightCard from "./SpotlightCard";
 import {
@@ -13,6 +13,12 @@ import {
   FileText,
   Image as ImageIcon,
   X,
+  Github,
+  ArrowUpRight,
+  File,
+  Download,
+  Eye,
+  Award,
 } from "lucide-react";
 
 const projects = [
@@ -29,7 +35,8 @@ const projects = [
       "Dynamic form builder & validation",
     ],
     icon: Building2,
-    color: "bg-red-500",
+    color: "from-red-500 to-orange-500",
+    image: "/project/recruitment.png",
     link: "#",
   },
   {
@@ -45,7 +52,8 @@ const projects = [
       "Dynamic form builder for medical records",
     ],
     icon: Hospital,
-    color: "bg-purple-500",
+    color: "from-purple-500 to-violet-500",
+    image: "/project/medical-record.png",
     link: "#",
   },
   {
@@ -61,7 +69,8 @@ const projects = [
       "Modern UI/UX design",
     ],
     icon: PlayCircle,
-    color: "bg-blue-500",
+    color: "from-blue-500 to-cyan-500",
+    image: "/project/animefly.png",
     link: "#",
   },
   {
@@ -77,33 +86,129 @@ const projects = [
       "Dynamic charts and analytics",
     ],
     icon: BarChart2,
-    color: "bg-green-500",
+    color: "from-emerald-500 to-teal-500",
+    image: "/project/sentiment-analysis.png",
     link: "#",
   },
 ];
 
-// Sample certificates - user will replace with their actual certificates
-const certificates = [
-  { id: 1, file: "/certificates/cert1.jpg", type: "image" },
-  { id: 2, file: "/certificates/cert2.pdf", type: "pdf" },
-  { id: 3, file: "/certificates/cert3.jpg", type: "image" },
-  { id: 4, file: "/certificates/cert4.pdf", type: "pdf" },
-  { id: 5, file: "/certificates/cert5.jpg", type: "image" },
-  { id: 6, file: "/certificates/cert6.jpg", type: "image" },
-];
+// Helper to detect file type from extension
+const getFileType = (filename) => {
+  const ext = filename.split(".").pop().toLowerCase();
+  if (["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp"].includes(ext))
+    return "image";
+  if (ext === "pdf") return "pdf";
+  if (["doc", "docx"].includes(ext)) return "doc";
+  return "unknown";
+};
+
+const getFileIcon = (type) => {
+  switch (type) {
+    case "image":
+      return ImageIcon;
+    case "pdf":
+      return FileText;
+    case "doc":
+      return File;
+    default:
+      return FileText;
+  }
+};
+
+const getFileColor = (type) => {
+  switch (type) {
+    case "image":
+      return "text-blue-400";
+    case "pdf":
+      return "text-red-400";
+    case "doc":
+      return "text-indigo-400";
+    default:
+      return "text-gray-400";
+  }
+};
 
 const ITEMS_PER_PAGE = 4;
+const GITHUB_URL = "https://github.com/danibahri";
 
 const Projects = () => {
   const [activeTab, setActiveTab] = useState("projects");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCert, setSelectedCert] = useState(null);
+  const [certificates, setCertificates] = useState([]);
+  const [hoveredProject, setHoveredProject] = useState(null);
+
+  // Dynamically scan /certificates folder
+  useEffect(() => {
+    const loadCertificates = async () => {
+      try {
+        // Use Vite's import.meta.glob to dynamically load certificates
+        const imageFiles = import.meta.glob(
+          "/public/certificates/*.{jpg,jpeg,png,gif,webp,svg,bmp}",
+          { eager: true, query: "?url", import: "default" },
+        );
+        const pdfFiles = import.meta.glob("/public/certificates/*.pdf", {
+          eager: true,
+          query: "?url",
+          import: "default",
+        });
+        const docFiles = import.meta.glob("/public/certificates/*.{doc,docx}", {
+          eager: true,
+          query: "?url",
+          import: "default",
+        });
+
+        const allFiles = { ...imageFiles, ...pdfFiles, ...docFiles };
+
+        const certs = Object.entries(allFiles).map(([path, url], index) => {
+          const filename = path.split("/").pop();
+          const type = getFileType(filename);
+          return {
+            id: index + 1,
+            file: url,
+            filename,
+            type,
+            name: filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " "),
+          };
+        });
+
+        setCertificates(certs);
+      } catch (error) {
+        console.error("Error loading certificates:", error);
+        // Fallback: try common file names
+        const fallbackCerts = [];
+        const extensions = ["jpg", "jpeg", "png", "pdf", "doc", "docx"];
+        for (let i = 1; i <= 20; i++) {
+          for (const ext of extensions) {
+            const file = `/certificates/cert${i}.${ext}`;
+            try {
+              const response = await fetch(file, { method: "HEAD" });
+              if (response.ok) {
+                fallbackCerts.push({
+                  id: fallbackCerts.length + 1,
+                  file,
+                  filename: `cert${i}.${ext}`,
+                  type: getFileType(`cert${i}.${ext}`),
+                  name: `Certificate ${i}`,
+                });
+              }
+            } catch {
+              // Skip unavailable files
+            }
+          }
+        }
+        setCertificates(fallbackCerts);
+      }
+    };
+
+    loadCertificates();
+  }, []);
 
   const totalPages = Math.ceil(certificates.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedCertificates = certificates.slice(
     startIndex,
-    startIndex + ITEMS_PER_PAGE
+    startIndex + ITEMS_PER_PAGE,
   );
 
   const handleTabChange = (tab) => {
@@ -113,42 +218,63 @@ const Projects = () => {
 
   const openModal = (cert) => {
     setSelectedCert(cert);
+    document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
     setSelectedCert(null);
+    document.body.style.overflow = "";
   };
 
   return (
-    <section id="projects" className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 text-center">
-          Portfolio
-        </h2>
+    <section id="projects" className="py-24 px-4 relative">
+      {/* Decorative */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
+            My Work
+          </span>
+          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight">
+            Portfolio <span className="text-gradient-purple">Showcase</span>
+          </h2>
+        </motion.div>
 
         {/* Tabs */}
         <div className="flex justify-center mb-12">
-          <div className="inline-flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10">
-            <button
-              onClick={() => handleTabChange("projects")}
-              className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 ${
-                activeTab === "projects"
-                  ? "bg-purple-500 text-white shadow-lg"
-                  : "text-gray-400 hover:text-white"
-              }`}
-            >
-              Proyek Unggulan
-            </button>
-            <button
-              onClick={() => handleTabChange("certificates")}
-              className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 ${
-                activeTab === "certificates"
-                  ? "bg-purple-500 text-white shadow-lg"
-                  : "text-gray-400 hover:text-white"
-              }`}
-            >
-              Sertifikat
-            </button>
+          <div className="inline-flex glass rounded-2xl p-1.5 gap-1">
+            {[
+              { key: "projects", label: "Proyek Unggulan" },
+              { key: "certificates", label: "Sertifikat" },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => handleTabChange(tab.key)}
+                className={`relative px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 text-sm ${
+                  activeTab === tab.key
+                    ? "text-white"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                {activeTab === tab.key && (
+                  <motion.div
+                    layoutId="projects-tab"
+                    className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl border border-purple-500/30"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                <span className="relative z-10">{tab.icon}</span>
+                <span className="relative z-10">{tab.label}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -161,70 +287,140 @@ const Projects = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-8"
             >
-              {projects.map((project, index) => (
-                <a
-                  key={index}
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block h-full group"
-                >
-                  <SpotlightCard className="h-full flex flex-col transition-transform duration-300 group-hover:-translate-y-2">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center gap-4">
-                        <div
-                          className={`p-3 rounded-xl ${project.color} text-white shadow-lg`}
-                        >
-                          <project.icon size={24} />
+              {/* Only show first 4 projects */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {projects.slice(0, 4).map((project, index) => (
+                  <motion.a
+                    key={index}
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block h-full group"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    onMouseEnter={() => setHoveredProject(index)}
+                    onMouseLeave={() => setHoveredProject(null)}
+                  >
+                    <SpotlightCard className="h-full flex flex-col transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_20px_60px_rgba(168,85,247,0.1)] !p-0 !py-0">
+                      {/* Image Preview */}
+                      <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-2xl bg-gradient-to-br from-gray-900 to-gray-950">
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            e.target.parentElement.querySelector(
+                              ".img-fallback",
+                            ).style.display = "flex";
+                          }}
+                        />
+                        {/* Fallback when no image */}
+                        <div className="img-fallback absolute inset-0 hidden items-center justify-center bg-gradient-to-br from-gray-900 to-gray-950">
+                          <div
+                            className={`p-6 rounded-3xl bg-gradient-to-br ${project.color} opacity-20`}
+                          >
+                            <project.icon size={48} className="text-white" />
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-white leading-tight group-hover:text-purple-400 transition-colors">
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        {/* Icon badge */}
+                        <div
+                          className={`absolute top-3 left-3 p-2 rounded-xl bg-gradient-to-br ${project.color} text-white shadow-lg`}
+                        >
+                          <project.icon size={16} />
+                        </div>
+                        {/* External link */}
+                        <div className="absolute top-3 right-3 p-2 text-white/60 group-hover:text-white transition-all bg-black/30 backdrop-blur-sm rounded-xl group-hover:bg-black/50 group-hover:rotate-12 duration-300">
+                          <ExternalLink size={14} />
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6 flex flex-col flex-1">
+                        {/* Header */}
+                        <div className="mb-3">
+                          <h3 className="text-lg font-bold text-white leading-tight group-hover:text-gradient-purple transition-all duration-300">
                             {project.title}
                           </h3>
-                          <p className="text-sm text-gray-400">
+                          <p className="text-xs text-gray-500 font-mono uppercase tracking-wider mt-1">
                             {project.subtitle}
                           </p>
                         </div>
-                      </div>
-                      <div className="p-2 text-gray-400 group-hover:text-white transition-colors bg-white/5 rounded-lg group-hover:bg-white/10">
-                        <ExternalLink size={20} />
-                      </div>
-                    </div>
 
-                    <p className="text-gray-300 mb-6 text-sm leading-relaxed">
-                      {project.description}
-                    </p>
+                        {/* Description */}
+                        <p className="text-gray-400 mb-4 text-sm leading-relaxed line-clamp-2">
+                          {project.description}
+                        </p>
 
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {project.tech.map((t, i) => (
-                        <span
-                          key={i}
-                          className="px-3 py-1 text-xs font-medium text-purple-200 bg-purple-900/40 rounded-md border border-purple-700/50"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="mt-auto space-y-2">
-                      {project.features.map((feature, i) => (
-                        <div
-                          key={i}
-                          className="flex items-start gap-2 text-sm text-gray-400"
-                        >
-                          <CheckCircle
-                            size={16}
-                            className="text-green-500 mt-0.5 shrink-0"
-                          />
-                          <span>{feature}</span>
+                        {/* Tech Tags */}
+                        <div className="flex flex-wrap gap-2 mb-5">
+                          {project.tech.map((t, i) => (
+                            <span
+                              key={i}
+                              className="px-3 py-1 text-xs font-mono font-medium text-purple-300 bg-purple-500/10 rounded-lg border border-purple-500/20"
+                            >
+                              {t}
+                            </span>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </SpotlightCard>
+
+                        {/* Features */}
+                        <div className="mt-auto space-y-2">
+                          {project.features.map((feature, i) => (
+                            <div
+                              key={i}
+                              className="flex items-start gap-2.5 text-sm text-gray-400"
+                            >
+                              <CheckCircle
+                                size={14}
+                                className="text-emerald-500 mt-0.5 shrink-0"
+                              />
+                              <span>{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </SpotlightCard>
+                  </motion.a>
+                ))}
+              </div>
+
+              {/* View More on GitHub */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex justify-center mt-12"
+              >
+                <a
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl glass hover:bg-white/[0.08] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(168,85,247,0.15)]"
+                >
+                  <Github
+                    size={22}
+                    className="text-white group-hover:rotate-12 transition-transform duration-300"
+                  />
+                  <div className="text-left">
+                    <p className="text-white font-semibold text-sm">
+                      Lihat Semua Proyek
+                    </p>
+                    <p className="text-gray-500 text-xs">
+                      Explore more on GitHub →
+                    </p>
+                  </div>
+                  <ArrowUpRight
+                    size={18}
+                    className="text-gray-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all ml-2"
+                  />
                 </a>
-              ))}
+              </motion.div>
             </motion.div>
           ) : (
             <motion.div
@@ -234,102 +430,170 @@ const Projects = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                {paginatedCertificates.map((cert) => (
-                  <SpotlightCard
-                    key={cert.id}
-                    className="group cursor-pointer overflow-hidden"
-                  >
-                    <div className="aspect-[3/4] relative bg-gray-900 rounded-lg overflow-hidden">
-                      {cert.type === "image" ? (
-                        <img
-                          src={cert.file}
-                          alt={`Certificate ${cert.id}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                            e.target.src =
-                              "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23374151' width='200' height='200'/%3E%3Ctext fill='%239CA3AF' font-family='sans-serif' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3EImage%3C/text%3E%3C/svg%3E";
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
-                          <FileText
-                            size={48}
-                            className="text-purple-400 mb-2"
-                          />
-                          <span className="text-sm text-gray-400">
-                            PDF Certificate
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Hover overlay */}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <button
-                          onClick={() => openModal(cert)}
-                          className="px-4 py-2 bg-purple-500 text-white rounded-lg font-medium hover:bg-purple-600 transition-colors"
+              {certificates.length === 0 ? (
+                <div className="text-center py-20">
+                  <Award size={64} className="mx-auto text-gray-600 mb-4" />
+                  <p className="text-gray-500 text-lg">
+                    Belum ada sertifikat yang ditemukan.
+                  </p>
+                  <p className="text-gray-600 text-sm mt-2">
+                    Tambahkan file ke folder{" "}
+                    <code className="text-purple-400">
+                      public/certificates/
+                    </code>
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    {paginatedCertificates.map((cert, idx) => {
+                      const FileIcon = getFileIcon(cert.type);
+                      const iconColor = getFileColor(cert.type);
+                      return (
+                        <motion.div
+                          key={cert.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: idx * 0.1 }}
                         >
-                          Lihat Detail
-                        </button>
-                      </div>
-                    </div>
+                          <SpotlightCard className="group cursor-pointer overflow-hidden !p-0">
+                            <div className="aspect-[3/4] relative bg-gradient-to-br from-gray-900 to-gray-950 overflow-hidden">
+                              {cert.type === "image" ? (
+                                <img
+                                  src={cert.file}
+                                  alt={cert.name}
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                  loading="lazy"
+                                  onError={(e) => {
+                                    e.target.style.display = "none";
+                                    e.target.nextSibling.style.display = "flex";
+                                  }}
+                                />
+                              ) : null}
 
-                    {/* Type indicator */}
-                    <div className="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-md flex items-center gap-1">
-                      {cert.type === "image" ? (
-                        <ImageIcon size={14} className="text-blue-400" />
-                      ) : (
-                        <FileText size={14} className="text-red-400" />
-                      )}
-                      <span className="text-xs text-white uppercase">
-                        {cert.type}
-                      </span>
-                    </div>
-                  </SpotlightCard>
-                ))}
-              </div>
+                              {/* Fallback / Non-image display */}
+                              {cert.type !== "image" && (
+                                <div className="w-full h-full flex flex-col items-center justify-center gap-3 p-6">
+                                  <div
+                                    className={`p-4 rounded-2xl bg-white/5 ${iconColor}`}
+                                  >
+                                    <FileIcon size={40} />
+                                  </div>
+                                  <span className="text-sm text-gray-400 text-center line-clamp-2">
+                                    {cert.name}
+                                  </span>
+                                  <span className="px-3 py-1 text-xs font-mono uppercase bg-white/5 rounded-lg text-gray-500 border border-white/10">
+                                    {cert.type.toUpperCase()}
+                                  </span>
+                                </div>
+                              )}
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-4">
-                  <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(1, prev - 1))
-                    }
-                    disabled={currentPage === 1}
-                    className="p-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
+                              {/* Hidden fallback for broken images */}
+                              <div className="w-full h-full flex-col items-center justify-center gap-3 p-6 hidden">
+                                <div
+                                  className={`p-4 rounded-2xl bg-white/5 ${iconColor}`}
+                                >
+                                  <FileIcon size={40} />
+                                </div>
+                                <span className="text-sm text-gray-400 text-center">
+                                  {cert.name}
+                                </span>
+                              </div>
 
-                  <div className="flex items-center gap-2">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page)}
-                          className={`w-10 h-10 rounded-lg font-medium transition-all ${
-                            currentPage === page
-                              ? "bg-purple-500 text-white"
-                              : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      )
-                    )}
+                              {/* Hover overlay */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center p-4">
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      openModal(cert);
+                                    }}
+                                    className="flex items-center gap-1.5 px-4 py-2 bg-purple-500 text-white rounded-xl text-sm font-medium hover:bg-purple-600 transition-colors"
+                                  >
+                                    <Eye size={14} />
+                                    Lihat
+                                  </button>
+                                  <a
+                                    href={cert.file}
+                                    download
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="flex items-center gap-1.5 px-4 py-2 bg-white/10 text-white rounded-xl text-sm font-medium hover:bg-white/20 transition-colors backdrop-blur-sm"
+                                  >
+                                    <Download size={14} />
+                                  </a>
+                                </div>
+                              </div>
+
+                              {/* Type badge */}
+                              <div className="absolute top-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-sm rounded-lg flex items-center gap-1.5 border border-white/10">
+                                <FileIcon size={12} className={iconColor} />
+                                <span className="text-[10px] text-white uppercase font-mono tracking-wider">
+                                  {cert.filename?.split(".").pop()}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Card Footer */}
+                            <div className="p-4 border-t border-white/5">
+                              <p className="text-white text-sm font-medium truncate">
+                                {cert.name}
+                              </p>
+                              <p className="text-gray-500 text-xs mt-0.5">
+                                {cert.filename}
+                              </p>
+                            </div>
+                          </SpotlightCard>
+                        </motion.div>
+                      );
+                    })}
                   </div>
 
-                  <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="p-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-center gap-3 mt-8">
+                      <button
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.max(1, prev - 1))
+                        }
+                        disabled={currentPage === 1}
+                        className="p-2.5 rounded-xl glass text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+
+                      <div className="flex items-center gap-1.5">
+                        {Array.from(
+                          { length: totalPages },
+                          (_, i) => i + 1,
+                        ).map((page) => (
+                          <button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={`w-10 h-10 rounded-xl font-medium text-sm transition-all ${
+                              currentPage === page
+                                ? "bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                                : "glass text-gray-400 hover:text-white hover:bg-white/10"
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          setCurrentPage((prev) =>
+                            Math.min(totalPages, prev + 1),
+                          )
+                        }
+                        disabled={currentPage === totalPages}
+                        className="p-2.5 rounded-xl glass text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
             </motion.div>
           )}
@@ -343,49 +607,132 @@ const Projects = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl"
             onClick={closeModal}
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", duration: 0.5 }}
-              className="relative max-w-5xl w-full max-h-[90vh] bg-gray-900 rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+              className="relative max-w-5xl w-full max-h-[90vh] bg-gray-950 rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.5)]"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close button */}
-              <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors backdrop-blur-sm"
-              >
-                <X size={24} />
-              </button>
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-4 border-b border-white/10 bg-white/[0.02]">
+                <div className="flex items-center gap-3">
+                  {(() => {
+                    const Icon = getFileIcon(selectedCert.type);
+                    return (
+                      <Icon
+                        size={18}
+                        className={getFileColor(selectedCert.type)}
+                      />
+                    );
+                  })()}
+                  <div>
+                    <h3 className="text-white font-medium text-sm">
+                      {selectedCert.name}
+                    </h3>
+                    <p className="text-gray-500 text-xs">
+                      {selectedCert.filename}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={selectedCert.file}
+                    download
+                    className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all"
+                    title="Download"
+                  >
+                    <Download size={18} />
+                  </a>
+                  <a
+                    href={selectedCert.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all"
+                    title="Open in new tab"
+                  >
+                    <ExternalLink size={18} />
+                  </a>
+                  <button
+                    onClick={closeModal}
+                    className="p-2 rounded-xl bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-all"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
 
-              {/* Certificate content */}
-              <div className="w-full h-full flex items-center justify-center p-8">
+              {/* Modal Content */}
+              <div
+                className="w-full overflow-auto"
+                style={{ maxHeight: "calc(90vh - 60px)" }}
+              >
                 {selectedCert.type === "image" ? (
-                  <img
-                    src={selectedCert.file}
-                    alt="Certificate"
-                    className="max-w-full max-h-[80vh] object-contain rounded-lg"
-                  />
-                ) : (
-                  <div className="w-full h-[80vh] flex flex-col items-center justify-center gap-4">
-                    <FileText size={64} className="text-purple-400" />
-                    <p className="text-white text-lg">PDF Certificate</p>
+                  <div className="flex items-center justify-center p-6 min-h-[400px]">
+                    <img
+                      src={selectedCert.file}
+                      alt={selectedCert.name}
+                      className="max-w-full max-h-[75vh] object-contain rounded-xl"
+                    />
+                  </div>
+                ) : selectedCert.type === "pdf" ? (
+                  <div className="w-full h-[80vh]">
                     <iframe
                       src={selectedCert.file}
-                      className="w-full h-full rounded-lg border border-white/10"
-                      title="Certificate PDF"
+                      className="w-full h-full"
+                      title={selectedCert.name}
                     />
+                  </div>
+                ) : selectedCert.type === "doc" ? (
+                  <div className="flex flex-col items-center justify-center gap-6 p-12 min-h-[400px]">
+                    <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
+                      <File size={64} className="text-indigo-400" />
+                    </div>
+                    <div className="text-center">
+                      <h4 className="text-white text-xl font-semibold mb-2">
+                        {selectedCert.name}
+                      </h4>
+                      <p className="text-gray-400 mb-6">
+                        Dokumen Word tidak bisa ditampilkan langsung di browser.
+                      </p>
+                      <div className="flex gap-3 justify-center">
+                        <a
+                          href={selectedCert.file}
+                          download
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-medium hover:shadow-[0_0_30px_rgba(168,85,247,0.3)] transition-all"
+                        >
+                          <Download size={18} />
+                          Download File
+                        </a>
+                        <a
+                          href={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(window.location.origin + selectedCert.file)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-6 py-3 glass text-white rounded-2xl font-medium hover:bg-white/10 transition-all"
+                        >
+                          <ExternalLink size={18} />
+                          View Online
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center gap-4 p-12 min-h-[400px]">
+                    <FileText size={64} className="text-gray-500" />
+                    <p className="text-gray-400">
+                      Format file tidak didukung untuk preview
+                    </p>
                     <a
                       href={selectedCert.file}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 px-6 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors"
+                      download
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-purple-500 text-white rounded-2xl font-medium"
                     >
-                      Buka di Tab Baru
+                      <Download size={18} />
+                      Download
                     </a>
                   </div>
                 )}

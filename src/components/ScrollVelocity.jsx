@@ -56,11 +56,16 @@ function ParallaxText({ children, baseVelocity = 100 }) {
 
 const ScrollVelocity = () => {
   return (
-    <section className="py-20 overflow-hidden bg-black">
-      <div className="text-6xl md:text-9xl font-bold uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-500 opacity-40">
-        <ParallaxText baseVelocity={5}>Web Developer</ParallaxText>
+    <section className="py-16 overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/[0.02] to-transparent pointer-events-none" />
+      <div className="text-6xl md:text-9xl font-black uppercase tracking-tighter opacity-[0.07]">
+        <ParallaxText baseVelocity={5}>
+          <span className="text-white">Web Developer</span>
+        </ParallaxText>
         <ParallaxText baseVelocity={-5}>
-          Frontend Developer - Backend Developer - Fullstack Developer
+          <span className="text-gradient-purple">
+            Frontend • Backend • Fullstack
+          </span>
         </ParallaxText>
       </div>
     </section>

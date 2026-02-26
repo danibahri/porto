@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import TagCloud from "TagCloud";
+import { motion } from "framer-motion";
 
 const TechCloud = () => {
   const containerRef = useRef(null);
@@ -24,6 +25,11 @@ const TechCloud = () => {
       getIcon("python/python-original.svg"),
       getIcon("mysql/mysql-original.svg"),
       getIcon("bootstrap/bootstrap-original.svg"),
+      getIcon("livewire/livewire-original.svg"),
+      // Flux (text badge since no devicon available)
+      `<span style="background: linear-gradient(135deg, #a855f7, #ec4899); color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 16px; pointer-events: none; white-space: nowrap;">⚡ Flux</span>`,
+      // Livewire text alternative
+      `<span style="background: linear-gradient(135deg, #fb70a9, #e83e8c); color: white; padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 16px; pointer-events: none; white-space: nowrap;">🔥 Livewire</span>`,
     ];
 
     const options = {
@@ -46,13 +52,32 @@ const TechCloud = () => {
   }, []);
 
   return (
-    <section className="py-20 bg-black flex flex-col items-center justify-center overflow-hidden">
-      <h2 className="text-3xl md:text-5xl font-bold text-white mb-10 text-center">
-        Tech Stack
-      </h2>
-      <div className="text-purple-400 font-bold text-xl md:text-2xl cursor-pointer hover:text-purple-300 transition-colors">
+    <section className="py-24 flex flex-col items-center justify-center overflow-hidden relative">
+      {/* Decorative */}
+      <div className="absolute inset-0 bg-gradient-radial from-purple-500/5 via-transparent to-transparent pointer-events-none" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-center mb-10 relative z-10"
+      >
+        <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
+          Technologies
+        </span>
+        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight">
+          Tech <span className="text-gradient-purple">Stack</span>
+        </h2>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        className="text-purple-400 font-bold text-xl md:text-2xl cursor-pointer hover:text-purple-300 transition-colors relative z-10"
+      >
         <span ref={containerRef} className="block" />
-      </div>
+      </motion.div>
     </section>
   );
 };

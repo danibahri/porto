@@ -15,21 +15,34 @@ import Services from "./components/Services";
 
 function App() {
   return (
-    <div className="bg-black min-h-screen text-white selection:bg-purple-500/30 cursor-none">
+    <div className="bg-dark min-h-screen text-white selection:bg-purple-500/30 cursor-none noise-overlay">
       <BlobCursor />
       <Chatbot />
       <MusicPlayer />
       <Navbar />
-      <main>
-        <Hero />
-        <ScrollVelocity />
-        <Experience />
-        <CurvedLoop />
-        <TechCloud />
-        <Projects />
-        <Services />
-        <About />
-        <Contact />
+      <main className="relative">
+        {/* Background grid pattern */}
+        <div className="fixed inset-0 bg-grid-pattern bg-grid opacity-100 pointer-events-none z-0" />
+
+        <div className="relative z-10">
+          <Hero />
+          <div className="section-divider" />
+          <ScrollVelocity />
+          <div className="section-divider" />
+          <About />
+          <div className="section-divider" />
+          <Experience />
+          <div className="section-divider" />
+          <CurvedLoop />
+          <div className="section-divider" />
+          <TechCloud />
+          <div className="section-divider" />
+          <Projects />
+          <div className="section-divider" />
+          <Services />
+          <div className="section-divider" />
+          <Contact />
+        </div>
       </main>
     </div>
   );
