@@ -15,7 +15,7 @@ import Services from "./components/Services";
 
 function App() {
   return (
-    <div className="bg-dark min-h-screen text-white selection:bg-purple-500/30 cursor-none noise-overlay">
+    <div className="bg-dark min-h-screen text-white selection:bg-purple-500/30 cursor-none noise-overlay overflow-x-hidden">
       <BlobCursor />
       <Chatbot />
       <MusicPlayer />

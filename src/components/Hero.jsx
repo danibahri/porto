@@ -9,7 +9,7 @@ const Hero = () => {
     <AuroraBackground className="min-h-screen">
       <section
         id="home"
-        className="flex flex-col items-center justify-center relative pt-20 mt-10 w-full"
+        className="flex flex-col items-center justify-center relative pt-20 mt-10 w-full overflow-hidden"
       >
         <div className="text-center z-10 px-4 flex flex-col items-center">
           {/* Status Badge */}
@@ -78,7 +78,7 @@ const Hero = () => {
           </motion.div>
 
           {/* Lanyard as Profile Photo */}
-          <div className="relative w-full h-[800px] flex justify-center items-start -mt-20">
+          <div className="relative w-full h-[500px] md:h-[800px] flex justify-center items-start -mt-20 max-w-[100vw]">
             <Lanyard />
           </div>
 

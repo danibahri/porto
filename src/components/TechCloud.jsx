@@ -7,8 +7,9 @@ const TechCloud = () => {
 
   useEffect(() => {
     const container = containerRef.current;
+    const isMobile = window.innerWidth < 768;
     const getIcon = (slug) =>
-      `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${slug}" width="50" height="50" alt="icon" style="pointer-events: none;" />`;
+      `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${slug}" width="${isMobile ? 35 : 50}" height="${isMobile ? 35 : 50}" alt="icon" style="pointer-events: none;" />`;
 
     const texts = [
       getIcon("react/react-original.svg"),
@@ -29,7 +30,7 @@ const TechCloud = () => {
     ];
 
     const options = {
-      radius: 300,
+      radius: isMobile ? 150 : 300,
       maxSpeed: "fast",
       initSpeed: "normal",
       direction: 135,
