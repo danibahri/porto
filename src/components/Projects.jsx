@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+  useSpring,
+} from "framer-motion";
 import SpotlightCard from "./SpotlightCard";
 import {
   Building2,
@@ -20,6 +26,7 @@ import {
   Eye,
   Award,
 } from "lucide-react";
+import { SplitText, FadeUp, ScrambleText } from "./TextReveal";
 
 // Dynamically scan project images (supports jpg, jpeg, png, gif, webp, svg, bmp)
 const projectImageFiles = import.meta.glob(
@@ -268,19 +275,21 @@ const Projects = () => {
 
       <div className="max-w-7xl mx-auto relative">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
-            My Work
-          </span>
-          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight">
-            Portfolio <span className="text-gradient-purple">Showcase</span>
-          </h2>
-        </motion.div>
+        <div className="text-center mb-12">
+          <FadeUp>
+            <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
+              My Work
+            </span>
+          </FadeUp>
+          <SplitText
+            className="text-4xl md:text-6xl font-black text-white tracking-tight font-display"
+            delay={0.1}
+            duration={0.03}
+            as="h2"
+          >
+            Portfolio Showcase
+          </SplitText>
+        </div>
 
         {/* Tabs */}
         <div className="flex justify-center mb-12">
@@ -378,8 +387,8 @@ const Projects = () => {
                       <div className="p-6 flex flex-col flex-1">
                         {/* Header */}
                         <div className="mb-3">
-                          <h3 className="text-lg font-bold text-white leading-tight group-hover:text-gradient-purple transition-all duration-300">
-                            {project.title}
+                          <h3 className="text-lg font-bold text-white leading-tight group-hover:text-gradient-purple transition-all duration-300 font-display">
+                            <ScrambleText>{project.title}</ScrambleText>
                           </h3>
                           <p className="text-xs text-gray-500 font-mono uppercase tracking-wider mt-1">
                             {project.subtitle}

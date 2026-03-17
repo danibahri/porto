@@ -11,6 +11,8 @@ import {
   ArrowRight,
   Zap,
 } from "lucide-react";
+import { SplitText, FadeUp } from "./TextReveal";
+import MagneticEffect from "./MagneticEffect";
 
 const services = [
   {
@@ -77,32 +79,33 @@ const Services = () => {
 
       <div className="max-w-6xl mx-auto relative">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
-            Services
-          </span>
-          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4">
-            Layanan <span className="text-gradient-purple">Saya</span>
-          </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Menyediakan berbagai layanan profesional untuk kebutuhan web
-            development dan penulisan akademik
-          </p>
-        </motion.div>
+        <div className="text-center mb-16">
+          <FadeUp>
+            <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
+              Services
+            </span>
+          </FadeUp>
+          <SplitText
+            className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4 font-display"
+            delay={0.1}
+            duration={0.03}
+            as="h2"
+          >
+            Layanan Saya
+          </SplitText>
+          <FadeUp delay={0.3}>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Menyediakan berbagai layanan profesional untuk kebutuhan web
+              development dan penulisan akademik
+            </p>
+          </FadeUp>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {services.map((category, index) => (
-            <motion.div
+            <FadeUp
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15 }}
+              delay={index * 0.15}
               className="glass rounded-3xl p-8 hover:bg-white/[0.06] transition-all duration-500 group relative overflow-hidden"
             >
               {/* Gradient glow on hover */}
@@ -118,7 +121,7 @@ const Services = () => {
                   <category.icon size={28} className="text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">
+                  <h3 className="text-xl font-bold text-white font-display">
                     {category.category}
                   </h3>
                   <p className="text-xs text-gray-500 font-mono uppercase tracking-wider">
@@ -181,29 +184,26 @@ const Services = () => {
 
               {/* CTA Button */}
               <div className="mt-8 relative">
-                <a
-                  href="#contact"
-                  className={`group/btn block w-full py-3.5 px-6 bg-gradient-to-r ${category.color} text-white font-medium rounded-2xl text-center transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:-translate-y-0.5 flex items-center justify-center gap-2`}
-                >
-                  <Zap size={16} />
-                  Konsultasi Gratis
-                  <ArrowRight
-                    size={14}
-                    className="group-hover/btn:translate-x-1 transition-transform"
-                  />
-                </a>
+                <MagneticEffect strength={0.1}>
+                  <a
+                    href="#contact"
+                    className={`group/btn block w-full py-3.5 px-6 bg-gradient-to-r ${category.color} text-white font-medium font-display rounded-2xl text-center transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:-translate-y-0.5 flex items-center justify-center gap-2`}
+                  >
+                    <Zap size={16} />
+                    Konsultasi Gratis
+                    <ArrowRight
+                      size={14}
+                      className="group-hover/btn:translate-x-1 transition-transform"
+                    />
+                  </a>
+                </MagneticEffect>
               </div>
-            </motion.div>
+            </FadeUp>
           ))}
         </div>
 
         {/* Bottom Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-12 flex justify-center"
-        >
+        <FadeUp className="mt-12 flex justify-center" delay={0.4}>
           <div className="inline-flex items-center gap-3 px-6 py-3 glass rounded-2xl">
             <div className="flex items-center gap-1.5">
               <span className="text-yellow-400 text-lg">⭐</span>
@@ -216,7 +216,7 @@ const Services = () => {
               Harga bersaing & hasil berkualitas!
             </span>
           </div>
-        </motion.div>
+        </FadeUp>
       </div>
     </section>
   );

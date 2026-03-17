@@ -1,6 +1,13 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useRef } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useInView,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { Calendar, MapPin, ChevronDown, Briefcase } from "lucide-react";
+import { SplitText, FadeUp } from "./TextReveal";
 
 const experiences = [
   // frealence sampai sekarang
@@ -71,6 +78,12 @@ const experiences = [
 
 const Experience = () => {
   const [expandedIndex, setExpandedIndex] = useState(0);
+  const timelineRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start end", "end start"],
+  });
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
     <section className="py-24 text-white px-4 relative overflow-hidden">
@@ -79,24 +92,31 @@ const Experience = () => {
 
       <div className="max-w-5xl mx-auto relative">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
-            Career Path
-          </span>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight">
-            Pengalaman <span className="text-gradient-purple">Kerja</span>
-          </h2>
-        </motion.div>
+        <div className="text-center mb-16">
+          <FadeUp>
+            <span className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
+              Career Path
+            </span>
+          </FadeUp>
+          <SplitText
+            className="text-4xl md:text-6xl font-black tracking-tight font-display text-white"
+            delay={0.1}
+            duration={0.03}
+            as="h2"
+          >
+            Pengalaman Kerja
+          </SplitText>
+        </div>
 
         {/* Timeline */}
-        <div className="relative">
-          {/* Line */}
-          <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-purple-500/50 via-pink-500/30 to-transparent" />
+        <div className="relative" ref={timelineRef}>
+          {/* Animated Line */}
+          <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-white/5">
+            <motion.div
+              className="w-full bg-gradient-to-b from-purple-500 via-pink-500 to-purple-500/0"
+              style={{ height: lineHeight }}
+            />
+          </div>
 
           <div className="space-y-4">
             {experiences.map((exp, index) => (
@@ -108,9 +128,17 @@ const Experience = () => {
                 transition={{ delay: index * 0.1 }}
                 className="relative pl-16 md:pl-20"
               >
-                {/* Timeline Dot */}
-                <div
+                {/* Timeline Dot with pulse */}
+                <motion.div
                   className={`absolute left-4 md:left-6 top-6 w-4 h-4 rounded-full bg-gradient-to-br ${exp.color} shadow-lg ring-4 ring-dark z-10`}
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    delay: index * 0.1 + 0.2,
+                    type: "spring",
+                    stiffness: 300,
+                  }}
                 />
 
                 {/* Card */}
@@ -125,7 +153,7 @@ const Experience = () => {
                   <div className="p-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                       <div>
-                        <h3 className="text-lg md:text-xl font-bold text-white">
+                        <h3 className="text-lg md:text-xl font-bold text-white font-display">
                           {exp.title}
                         </h3>
                         <h4 className="text-purple-400 font-medium">

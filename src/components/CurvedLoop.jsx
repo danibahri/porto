@@ -7,7 +7,7 @@ const CurvedLoop = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-dark via-transparent to-dark z-10 pointer-events-none" />
       <div className="relative w-full h-[80px] md:h-[120px] flex items-center">
         <motion.div
-          className="absolute whitespace-nowrap text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter"
+          className="absolute whitespace-nowrap text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter font-display"
           animate={{ x: [0, -1200] }}
           transition={{
             repeat: Infinity,
@@ -15,7 +15,7 @@ const CurvedLoop = () => {
             ease: "linear",
           }}
         >
-          <span className="text-gradient-purple opacity-20">
+          <span className="text-gradient-purple opacity-25">
             OPEN TO WORK ✦ CREATIVE DEVELOPER ✦ FRONTEND ✦ BACKEND ✦ FULLSTACK ✦
             OPEN TO WORK ✦ CREATIVE DEVELOPER ✦ FRONTEND ✦ BACKEND ✦ FULLSTACK ✦
           </span>

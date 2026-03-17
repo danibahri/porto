@@ -58,13 +58,13 @@ const ScrollVelocity = () => {
   return (
     <section className="py-16 overflow-hidden relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/[0.02] to-transparent pointer-events-none" />
-      <div className="text-4xl sm:text-6xl md:text-9xl font-black uppercase tracking-tighter opacity-[0.07]">
+      <div className="text-5xl sm:text-7xl md:text-[10rem] font-black uppercase tracking-tighter opacity-[0.08] font-display">
         <ParallaxText baseVelocity={5}>
           <span className="text-white">Web Developer</span>
         </ParallaxText>
         <ParallaxText baseVelocity={-5}>
           <span className="text-gradient-purple">
-            Frontend • Backend • Fullstack
+            Frontend &bull; Backend &bull; Fullstack
           </span>
         </ParallaxText>
       </div>
